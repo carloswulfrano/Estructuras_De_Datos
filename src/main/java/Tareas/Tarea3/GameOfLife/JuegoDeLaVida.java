@@ -1,13 +1,13 @@
 package Tareas.Tarea3.GameOfLife;
-
 import Trabajos.Clase_01_09_26.Array2DADT;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
+
 public class JuegoDeLaVida {
 
+    //constantes para despues comparar y saber si esta viva o muerta
     private static final int VIVA = 1;
     private static final int MUERTA = 0;
 
@@ -15,13 +15,12 @@ public class JuegoDeLaVida {
     private int filas;
     private int columnas;
 
-    // Lee la configuración inicial de población desde un archivo CSV
-    // (cada celda debe ser 0 = muerta o 1 = viva)
+    //para leer el archivo xddd
     public boolean leerArchivo(String ruta) {
         File archivo = new File(ruta);
 
         try {
-            // Primera pasada: contamos filas y columnas para saber el tamaño del tablero
+            //primero leemos para saber el tamaño
             Scanner contadorLector = new Scanner(archivo);
             filas = 0;
             columnas = 0;
@@ -39,7 +38,7 @@ public class JuegoDeLaVida {
 
             tablero = new Array2DADT<>(filas, columnas);
 
-            // Segunda pasada: ahora sí llenamos el tablero con los valores del archivo
+            //leemos por segunda vez para rellenar con los datos
             Scanner lector = new Scanner(archivo);
             int fila = 0;
 
@@ -57,6 +56,7 @@ public class JuegoDeLaVida {
             lector.close();
             return true;
 
+            //por si no se encuentra el arcvhio CSV
         } catch (FileNotFoundException e) {
             System.out.println("No se encontró el archivo.");
             System.out.println("Se buscó en: " + archivo.getAbsolutePath());
@@ -64,20 +64,20 @@ public class JuegoDeLaVida {
         }
     }
 
-    // Cuenta cuántos de los 8 vecinos de una celda están vivos.
-    // Las celdas fuera del tablero se consideran muertas (no se envuelve el tablero).
+
     private int contarVecinosVivos(int fila, int columna) {
         int contador = 0;
 
-        for (int df = -1; df <= 1; df++) {
-            for (int dc = -1; dc <= 1; dc++) {
-                if (df == 0 && dc == 0) {
-                    continue; // no contamos la propia celda
+        for (int fil = -1; fil <= 1; fil++) {           //para moverse alrededor
+            for (int colum = -1; colum <= 1; colum++) { //de la celda
+                if (fil == 0 && colum == 0) {           //aca estas en la celda que se esta revisando
+                    continue;                           //entonces no cuenta la misma celda
                 }
 
-                int filaVecina = fila + df;
-                int columnaVecina = columna + dc;
+                int filaVecina = fila + fil;
+                int columnaVecina = columna + colum;
 
+                //para saber si el vecino existe o no, en el caso de los bordes
                 if (filaVecina >= 0 && filaVecina < filas && columnaVecina >= 0 && columnaVecina < columnas) {
                     if (tablero.obtenerElemento(filaVecina, columnaVecina) == VIVA) {
                         contador++;
@@ -88,10 +88,12 @@ public class JuegoDeLaVida {
         return contador;
     }
 
-    // Calcula la siguiente generación aplicando las 4 reglas del juego
+
     public void siguienteGeneracion() {
+        //un tablero nuevo
         Array2DADT<Integer> nuevoTablero = new Array2DADT<>(filas, columnas);
 
+        //dos for anidados para saber si esta viva la celda y cuantos vecinos vivos tiene
         for (int fila = 0; fila < filas; fila++) {
             for (int columna = 0; columna < columnas; columna++) {
                 int vecinosVivos = contarVecinosVivos(fila, columna);
@@ -99,32 +101,38 @@ public class JuegoDeLaVida {
                 int nuevoEstado;
 
                 if (estadoActual == VIVA) {
+                    //regla 1: sobrevive
                     if (vecinosVivos == 2 || vecinosVivos == 3) {
-                        nuevoEstado = VIVA;   // Regla 1: sobrevive
+                        nuevoEstado = VIVA;
                     } else {
-                        nuevoEstado = MUERTA; // Reglas 2 y 3: muere por soledad o sobrepoblación
+                    //reglas 2 y 3: muere por soledad o sobrepoblación
+                        nuevoEstado = MUERTA;
                     }
                 } else {
+                    //regla 4: nace
                     if (vecinosVivos == 3) {
-                        nuevoEstado = VIVA;   // Regla 4: nace
+                        nuevoEstado = VIVA;
                     } else {
-                        nuevoEstado = MUERTA; // Regla 4: sigue muerta
+                        nuevoEstado = MUERTA;
                     }
                 }
-
+                //se va guardando en el tablero nuevo
                 nuevoTablero.insertarElemento(fila, columna, nuevoEstado);
             }
         }
 
-        // Reemplazamos el tablero viejo por el nuevo ya calculado
+        //reemplazamos el tablero viejo por el nuevp
         tablero = nuevoTablero;
     }
 
-    // Imprime el tablero actual: "O" para célula viva, "." para célula muerta
+
     public void imprimir() {
+
+        //dos for anidados ppara mostrar si esta viva o muerta la celda
         for (int fila = 0; fila < filas; fila++) {
             for (int columna = 0; columna < columnas; columna++) {
                 int estado = tablero.obtenerElemento(fila, columna);
+                //aca usamos un operador ternario para saber si esta viava o muerta (usted lo enseño el semestre pasado en P.O.O.)
                 System.out.print(estado == VIVA ? "O " : ". ");
             }
             System.out.println();
