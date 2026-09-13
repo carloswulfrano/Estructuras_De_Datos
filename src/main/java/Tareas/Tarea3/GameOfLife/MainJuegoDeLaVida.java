@@ -19,6 +19,7 @@ void main() {
         }
     }
 
+
      */
 
 
@@ -37,6 +38,7 @@ void main() {
             }
         }
     }
+
 
     /*
     JuegoDeLaVida escenario3 = new JuegoDeLaVida();
