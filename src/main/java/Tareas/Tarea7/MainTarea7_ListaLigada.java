@@ -17,7 +17,6 @@ void main() {
     lista.transversal();
     System.out.println();
     System.out.println("Tamaño: " + lista.getTamanio());
-    lista.estaVacia();
 
     System.out.println("---------Esta Vacia---------");
     lista.estaVacia();
