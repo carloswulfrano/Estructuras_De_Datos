@@ -82,5 +82,4 @@ void main() {
     System.out.println(empleados2.isEmpty());
     System.out.println(empleados2);
     System.out.println(empleados2.size());
-    System.out.println(empleados2.);
 }
